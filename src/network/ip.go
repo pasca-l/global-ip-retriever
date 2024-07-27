@@ -21,6 +21,7 @@ func RetrieveIps() (Ips, error) {
 }
 
 func (ips *Ips) retrieveIps() error {
+	// creates top-level “WebRTC Session”
 	conn, err := newWebRtcConnection()
 	if err != nil {
 		return err
@@ -31,14 +32,18 @@ func (ips *Ips) retrieveIps() error {
 	retriever := make(chan struct{})
 	conn.OnICECandidate(handleOnICECandidate(ips, retriever))
 
+	// creates a new SCTP stream if no SCTP association exists
+	// then, SCTP starts sending packets encrypted with established DTLS via ICE
 	if _, err = conn.CreateDataChannel("", nil); err != nil {
 		return err
 	}
 
+	// generates a local Session Description to share with the remote peer
 	offer, err := conn.CreateOffer(nil)
 	if err != nil {
 		return err
 	}
+	// commits any requested changes
 	if err = conn.SetLocalDescription(offer); err != nil {
 		return err
 	}
