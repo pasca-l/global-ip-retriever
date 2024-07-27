@@ -11,7 +11,4 @@ Global IP retriever, using [WebRTC (Web Real-Time Communication)](https://webrtc
 $ docker compose up
 ```
 
-2. Open website (port set to 8080).
-```
-http://localhost:8080/
-```
+2. Open website on [`http://localhost:8080`](http://localhost:8080).
